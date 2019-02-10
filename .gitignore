@@ -1,0 +1,6 @@
+MDK-ARM/PulseOximter/
+MDK-ARM/DebugConfig/PulseOximter_STM32F103RC_1.0.0.dbgconf
+*.scvd
+*.willc
+*.lst
+*.txt
