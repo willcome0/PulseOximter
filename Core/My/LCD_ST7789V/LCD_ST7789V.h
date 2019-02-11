@@ -7,12 +7,15 @@
 extern "C" {
 #endif
 
+
+#define USE_HORIZONTAL 0
 	
-class LCD_ST7789V
+class C_LCD_ST7789V
 {
 private:
-
+	
 	enum LCD_PinState{L=0, H};
+
 	
 	inline void DelayMs(uint16_t ms)
 	{
@@ -49,16 +52,47 @@ private:
 		LCD_RD_GPIO_Port->BSRR = (state==H) ? (LCD_RD_Pin) : ((uint32_t)LCD_RD_Pin << 16U);
 	}
 	
+	inline void SetCursor(uint16_t x, uint16_t y)
+	{
+		
+	}
 public:
 	
+	C_LCD_ST7789V(void)
+	{
+		Param.W_GRAMCmd = 0x2C;		// 写RAM指令
+		#if USE_HORIZONTAL == 1		//横屏	  
+			Param.Dir = 1;
+			Param.SetXCmd = 0x2B;
+			Param.SetYCmd = 0x2A;				 	 		
+			Param.Width = 320;
+			Param.Height = 240;
+		#else	//竖屏
+			Param.Dir = 0;
+			Param.SetXCmd = 0x2A;
+			Param.SetYCmd = 0x2B;				 	 		
+			Param.Width = 240;
+			Param.Height = 320;
+		#endif
+	};
+	
 	enum DataType{CMD=0, DATA};
+	struct  
+	{										    
+		uint16_t Width;			//LCD 宽度
+		uint16_t Height;		//LCD 高度
+		uint16_t ID;			//LCD ID
+		uint8_t  Dir;			//横屏还是竖屏控制：0，竖屏；1，横屏。	
+		uint16_t W_GRAMCmd;		//开始写gram指令
+		uint16_t SetXCmd;		//设置x坐标指令
+		uint16_t SetYCmd;		//设置y坐标指令	 
+	}Param;
 	
 	void Write_Para(DataType type, uint16_t para);
 	void Reset(void);
 	void Init(void);
 	void SetWindows(uint8_t Xstart, uint8_t Ystart, uint16_t Xend, uint16_t Yend);
-
-
+	void DrawPoint(uint16_t x, uint16_t y, uint16_t color);
 };
 	
 	

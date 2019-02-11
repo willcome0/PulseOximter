@@ -4,6 +4,7 @@
 #include "gpio.h"
 
 #include "LCD_ST7789V.h"
+#include "GUI.h"
 
 #ifdef __cplusplus
 extern "C" {

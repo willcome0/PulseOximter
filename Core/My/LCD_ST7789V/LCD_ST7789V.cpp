@@ -1,7 +1,7 @@
 #include "LCD_ST7789V.h"
 
 
-void LCD_ST7789V::Write_Para(DataType type, uint16_t para)
+void C_LCD_ST7789V::Write_Para(DataType type, uint16_t para)
 {
 	Write_CS_Pin(L);
 	Write_RD_Pin(H);
@@ -14,7 +14,7 @@ void LCD_ST7789V::Write_Para(DataType type, uint16_t para)
 	Write_CS_Pin(H);
 }
 
-void LCD_ST7789V::Reset(void)
+void C_LCD_ST7789V::Reset(void)
 {
 	Write_RST_Pin(H);
 	DelayMs(1);
@@ -24,7 +24,7 @@ void LCD_ST7789V::Reset(void)
 	DelayMs(120);
 }
 
-void LCD_ST7789V::Init(void)
+void C_LCD_ST7789V::Init(void)
 {
 	Reset();
 	
@@ -220,23 +220,29 @@ void LCD_ST7789V::Init(void)
 
 }
 
-void LCD_ST7789V::SetWindows(uint8_t Xstart, uint8_t Ystart, uint16_t Xend, uint16_t Yend)
+
+
+void C_LCD_ST7789V::SetWindows(uint8_t Xstart, uint8_t Ystart, uint16_t Xend, uint16_t Yend)
 {
     //set the X coordinates
-    Write_Para(CMD, 0x2A);
+    Write_Para(CMD, Param.SetXCmd);
     Write_Para(DATA, (Xstart >> 8) & 0xFF);
     Write_Para(DATA, Xstart & 0xFF);
-    Write_Para(DATA, ((Xend  - 1) >> 8) & 0xFF);
-    Write_Para(DATA, (Xend  - 1) & 0xFF);
+    Write_Para(DATA, ((Xend) >> 8) & 0xFF);
+    Write_Para(DATA, (Xend) & 0xFF);
 
     //set the Y coordinates
-    Write_Para(CMD, 0x2B);
+    Write_Para(CMD, Param.SetYCmd);
     Write_Para(DATA, (Ystart >> 8) & 0xFF);
     Write_Para(DATA, Ystart & 0xFF);
-    Write_Para(DATA, ((Yend  - 1) >> 8) & 0xFF);
-    Write_Para(DATA, (Yend  - 1) & 0xFF);
+    Write_Para(DATA, ((Yend) >> 8) & 0xFF);
+    Write_Para(DATA, (Yend) & 0xFF);
 
-    Write_Para(CMD, 0X2C);
+    Write_Para(CMD, Param.W_GRAMCmd);
 }
 
-
+void C_LCD_ST7789V::DrawPoint(uint16_t x, uint16_t y, uint16_t color)
+{
+	SetCursor(x, y);
+	Write_Para(DATA, color);
+}
